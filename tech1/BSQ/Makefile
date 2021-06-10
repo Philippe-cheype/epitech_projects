@@ -5,9 +5,10 @@
 ## Main makefile
 ##
 
-SRC		=	main.c						\
-			structure/new_table.c		\
-			structure/bsq.c
+SRC		=	$(wildcard src/*.c)						\
+			$(wildcard src/algorithm/*.c)			\
+			$(wildcard src/build_terrain/*.c)		\
+			$(wildcard src/destroy/*.c)
 
 NAME	=	bsq
 
@@ -15,26 +16,26 @@ LIB		=	/lib/
 
 MY		=	include/
 
+HEADERS	=	$(wildcard src/headers/*.h)
+
 CFLAGS	+=	-I./$(MY) -L.$(LIB) -lmy
 
 TEST	=	unit_tests
 
-.PHONY:		all
 all:
 			make -C./lib/ all
-			cp -f lib/my/headers/*.h $(MY)
-			gcc -o $(NAME) $(SRC) $(CFLAGS)
+			cp -f $(HEADERS) $(MY)
+			gcc -O3 -o $(NAME) $(SRC) $(CFLAGS)
 
-.PHONY:		clean
 clean:
 			make -C./lib/ clean
 
-.PHONY:		fclean
 fclean:		clean
 			rm -f $(NAME)
 			rm -f $(MY)*.h
 			make -C lib/ fclean
 
-.PHONY:		re
 re:			fclean all
 			make -C./lib/ re
+
+.PHONY:		all clean fclean re
